@@ -1,0 +1,11 @@
+doctype html 
+html 
+  head 
+    title="Data"
+  body 
+    h1 Data results
+    ul  
+      each val in userData
+       li= val.name + " : " + val.request 
+       button(type='submit', onClick=someFunction(val._id)) PressMe
+  

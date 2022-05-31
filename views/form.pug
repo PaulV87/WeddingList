@@ -1,0 +1,13 @@
+doctype html 
+html
+  head 
+    title="Form"
+  body
+    
+    form(action="/crud/", method='POST')
+      p
+        | Name: 
+        input(type='text', name='name')
+        |     Request: 
+        input(type='text', name='request')
+      input(type='submit', value='Submit')
