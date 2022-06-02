@@ -25,7 +25,6 @@ async function fetchData() {
   
   // For loop to dynamically fill in the table with the data from the database
   for (let i = 0; i < data.length; i++){
-    console.log(data[i].name);
     let row = table.insertRow(i+1);
     let cell1 = row.insertCell(0);
     let cell2 = row.insertCell(1);
@@ -33,15 +32,36 @@ async function fetchData() {
     let cell4 = row.insertCell(3);
     cell1.innerHTML = data[i].name;
     cell2.innerHTML = data[i].request;
-    cell3.innerHTML = "<button id='btnEdit' onclick=editClick>Edit</button>";
-    cell4.innerHTML = "<button id='btnDelete'>Delete</button>";
+    cell3.innerHTML = "<button id=" + data[i]._id + "Edit onclick=editClick(this)>Edit</button>";
+    cell4.innerHTML = "<button id=" + data[i]._id + "Delete onclick=deleteClick(this)>Delete</button>";
   }   
 }
 
 
-function editClick(){
-  console.log("click");
+async function editClick(e){
+  
+  let str = e.id;  
+  let partStr = str.slice(0, str.length - 4)
+  console.log(partStr);
 
+  console.log("Edit click");
+  const response = await fetch('/crud/edit', {
+    method: "post",
+    body: partStr
+  });
+}
+
+async function deleteClick(e){
+  let str = e.id;  
+  let idStr = str.slice(0, str.length - 6)
+  console.log(idStr);
+
+  const response = await fetch('/crud/delete', {
+    method: "post",
+    body: idStr
+  });
+
+  console.log("Delete click");
 }
 
 

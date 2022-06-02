@@ -32,4 +32,32 @@ router.get("/read", async (req, res) => {
   };  
 });
 
+router.post("/delete", async (req, res) => {
+  try{
+    // Mongoose call to get all the data
+    console.log("Delete route called")
+   // const data = await Request.find({});  
+    //console.log(data);  
+    //res.json({data})
+  } catch(err) {
+    console.log(err);
+    res.status(500).send();
+  };  
+});
+
+
+router.post("/edit", async (req, res) => {
+  try{
+    // Mongoose call to get all the data
+    console.log("Edit route called")
+   // const data = await Request.find({});  
+    //console.log(data);  
+    //res.json({data})
+  } catch(err) {
+    console.log(err);
+    res.status(500).send();
+  };  
+});
+
+
 module.exports = router;
