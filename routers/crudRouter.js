@@ -3,7 +3,7 @@ const Request = require("../models/requestModel");
 
 router.post("/",  async (req, res) => {
   try{
-
+    console.log(req.body);
     const {name, request} = req.body;
 
     console.log(name, request);
@@ -24,7 +24,7 @@ router.get("/read", async (req, res) => {
   try{
     // Mongoose call to get all the data
     const data = await Request.find({});  
-    console.log(data);  
+    // Return Data
     res.json({data})
   } catch(err) {
     console.log(err);
@@ -35,6 +35,8 @@ router.get("/read", async (req, res) => {
 router.post("/delete", async (req, res) => {
   try{
     // Mongoose call to get all the data
+    console.log(req.body);
+    //console.log(id);
     console.log("Delete route called")
    // const data = await Request.find({});  
     //console.log(data);  

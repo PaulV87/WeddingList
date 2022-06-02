@@ -55,13 +55,32 @@ async function deleteClick(e){
   let str = e.id;  
   let idStr = str.slice(0, str.length - 6)
   console.log(idStr);
-
-  const response = await fetch('/crud/delete', {
-    method: "post",
-    body: idStr
-  });
-
-  console.log("Delete click");
+  
+  const postData = {
+    id: idStr,
+  };
+  console.log(postData);
+  try {
+    const response = await fetch('/crud/delete', {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    });
+  
+    if (!response.ok) {
+      const message = 'Error with Status Code: ' + response.status;
+      throw new Error(message);
+    }
+  
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log('Error: ' + err);
+  }
 }
+
+
 
 

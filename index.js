@@ -9,7 +9,8 @@ const app = express()
 
 
 // create application/json parser
-var jsonParser = bodyParser.json()
+//var jsonParser = bodyParser.json()
+app.use(bodyParser.json())
 // for parsing application/xwww-form-urlencoded
 app.use(
   bodyParser.urlencoded({
@@ -17,6 +18,8 @@ app.use(
       extended: true,
   })
 );
+
+
 
 // Setup dotenv
 dotenv.config();
