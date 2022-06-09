@@ -1,22 +1,10 @@
+// Keeps track of the ID of the data being edited
 
-//document.getElementById("myTable").addEventListener("load", onLoadTest);
+let editId = null;
+
 
 async function fetchData() {
-
-  /* This is how to do it with promises
-  console.log("page loaded");
-  fetch("/crud/read").then(function(response){
-    console.log('success!', response);
-    return response.json();
-  }).then(function (data){
-    console.log(data);
-    console.log(data.data.length);
-  }).catch(function (err){
-    console.log("Something went wrong", err)
-
-  });
-  */
-
+  
   // This is how to do it with async await
   const resp = await fetch("/crud/read");
   const {data} = await resp.json();
@@ -32,25 +20,100 @@ async function fetchData() {
     let cell4 = row.insertCell(3);
     cell1.innerHTML = data[i].name;
     cell2.innerHTML = data[i].request;
-    cell3.innerHTML = "<button id=" + data[i]._id + "Edit onclick=editClick(this)>Edit</button>";
+    cell3.innerHTML = "<button id=" + data[i]._id + "Edit onclick=openEditModal(this)>Edit</button>";
     cell4.innerHTML = "<button id=" + data[i]._id + "Delete onclick=deleteClick(this)>Delete</button>";
   }   
 }
 
-
-async function editClick(e){
-  
+async function openEditModal(e){  
+  // Manipulates the string of the button ID to get the id string we want
   let str = e.id;  
-  let partStr = str.slice(0, str.length - 4)
-  console.log(partStr);
+  editId = str.slice(0, str.length - 4)
+  console.log(editId );
+  
+  const postData = {
+    id: editId ,
+  };
 
-  console.log("Edit click");
-  const response = await fetch('/crud/edit', {
-    method: "post",
-    body: partStr
-  });
+  // Get the modal
+  const modal = document.getElementById("myModal");
+  // When the user clicks on the button, open the modal
+  modal.style.display = "block";  
+
+  // Get the <span> element that closes the modal
+  const span = document.getElementsByClassName("close")[0]; 
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+   modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  try {
+    const res = await fetch('/crud/editData', {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    }).then(function(response) {
+      // Needed to give res a value
+      return response.json()
+    });     
+    setEditData(res);   
+  } catch (err) {
+    console.log('Error: ' + err);
+  }
 }
 
+// Function to fill in the values on the html form
+function setEditData(data){  
+  document.getElementById("name").value = data.name;
+  document.getElementById("request").value = data.request;  
+}
+
+// function to save the edited data
+async function editClick(e){
+  e.preventDefault();
+  
+  let name = document.getElementById("name").value 
+  let request = document.getElementById("request").value 
+
+  try {
+    const postData = {
+      id: editId,
+      name: name,
+      request: request
+
+    }
+    await fetch('/crud/edit', {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    }).then(function(response) {
+      // Needed to give res a value
+      // Closes Modal
+      document.getElementById("myModal").style.display = "none";
+      deleteTable();
+      fetchData();
+      return response.json()
+    });    
+    
+  
+  } catch (err) {
+    console.log('Error: ' + err);
+  }
+}
+
+// Removes an entry on the table
 async function deleteClick(e){
   let str = e.id;  
   let idStr = str.slice(0, str.length - 6)
@@ -61,25 +124,36 @@ async function deleteClick(e){
   };
   console.log(postData);
   try {
-    const response = await fetch('/crud/delete', {
+
+    await fetch('/crud/delete', {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(postData)
     });
-  
-    if (!response.ok) {
-      const message = 'Error with Status Code: ' + response.status;
-      throw new Error(message);
-    }
-  
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
+    deleteTable();
+    fetchData();
+    console.log("End of function");
+  } catch (err) {
     console.log('Error: ' + err);
   }
 }
+
+// function to delete the values of the table 
+// Prevents double entries after editing and deleting items
+function deleteTable(){
+  var tableHeaderRowCount = 1;
+  var table = document.getElementById("myTable");
+  var rowCount = table.rows.length;
+  for (var i = tableHeaderRowCount; i < rowCount; i++) {
+    table.deleteRow(tableHeaderRowCount);
+}
+
+}
+
+
+
 
 
 

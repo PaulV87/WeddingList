@@ -13,8 +13,25 @@
           <th>Edit</th>
           <th>Delete</th>     
         </tr>        
-      </table>
+      </table>      
       
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <form onsubmit="editClick(event)">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" value="" required><br>
+            <label for="request">Request:</label><br>
+            <input type="text" id="request" name="request" value=""><br><br>
+            <input type="submit" value="Submit">
+          </form> 
+        </div>
+
+      </div>
+
       <a href="/form.html">Form</a>
       <script src="tableScript.js"></script>
     </body>

@@ -7,10 +7,10 @@ var bodyParser = require('body-parser')
 // Setup express
 const app = express()
 
-
 // create application/json parser
 //var jsonParser = bodyParser.json()
 app.use(bodyParser.json())
+
 // for parsing application/xwww-form-urlencoded
 app.use(
   bodyParser.urlencoded({
@@ -18,8 +18,6 @@ app.use(
       extended: true,
   })
 );
-
-
 
 // Setup dotenv
 dotenv.config();
@@ -36,7 +34,6 @@ app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
 
 
 // connect to mongoDB
-
 mongoose.connect(
   process.env.MDB_CONNECT,
   {
