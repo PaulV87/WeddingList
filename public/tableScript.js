@@ -25,15 +25,8 @@ async function fetchData() {
   }   
 }
 
-async function openEditModal(e){  
-  // Manipulates the string of the button ID to get the id string we want
-  let str = e.id;  
-  editId = str.slice(0, str.length - 4)
-  console.log(editId );
-  
-  const postData = {
-    id: editId ,
-  };
+// function to get all the values needed to setup the edit modal
+async function openEditModal(e){    
 
   // Get the modal
   const modal = document.getElementById("myModal");
@@ -55,7 +48,19 @@ async function openEditModal(e){
     }
   }
 
+  // Manipulates the string of the button ID to get the id string we want
+  let str = e.id;  
+  editId = str.slice(0, str.length - 4)  
+  
+
   try {
+
+    // Creates post data object
+    const postData = {
+      id: editId ,
+    };
+
+    // fetch operation to call the editData backend 
     const res = await fetch('/crud/editData', {
       method: "post",
       headers: {
@@ -86,12 +91,15 @@ async function editClick(e){
   let request = document.getElementById("request").value 
 
   try {
+     // Creates post data object
     const postData = {
       id: editId,
       name: name,
       request: request
 
     }
+
+    // fetch operation to call the edit backend route
     await fetch('/crud/edit', {
       method: "post",
       headers: {
@@ -105,9 +113,7 @@ async function editClick(e){
       deleteTable();
       fetchData();
       return response.json()
-    });    
-    
-  
+    });      
   } catch (err) {
     console.log('Error: ' + err);
   }
@@ -117,14 +123,13 @@ async function editClick(e){
 async function deleteClick(e){
   let str = e.id;  
   let idStr = str.slice(0, str.length - 6)
-  console.log(idStr);
   
-  const postData = {
-    id: idStr,
-  };
-  console.log(postData);
   try {
-
+    // Data object to send to the backend
+    const postData = {
+      id: idStr,
+    };
+    // fetch operation to call the delete backend route
     await fetch('/crud/delete', {
       method: "post",
       headers: {
@@ -132,6 +137,8 @@ async function deleteClick(e){
       },
       body: JSON.stringify(postData)
     });
+
+    // Calls functions to recreate the table
     deleteTable();
     fetchData();
     console.log("End of function");
@@ -148,8 +155,7 @@ function deleteTable(){
   var rowCount = table.rows.length;
   for (var i = tableHeaderRowCount; i < rowCount; i++) {
     table.deleteRow(tableHeaderRowCount);
-}
-
+  }
 }
 
 
